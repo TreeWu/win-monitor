@@ -80,11 +80,6 @@ func (c *Client) Start() {
 	}
 }
 
-func (c *Client) restart() {
-	c.cancel()
-	c.Start()
-}
-
 func (c *Client) Init(ctx context.Context) Response {
 	resp := Response{}
 	for {

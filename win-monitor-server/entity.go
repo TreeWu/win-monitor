@@ -20,12 +20,6 @@ type RegistryResp struct {
 	ScreenshotUploadOriginImage   bool `json:"screenshotUploadOriginImage"`   // 是否上传原图
 }
 
-type Response struct {
-	Code int
-	Msg  string
-	Data RegistryResp
-}
-
 type Host struct {
 	Hostname        string `json:"hostname"`
 	OS              string `json:"os"`              // ex: freebsd, linux
@@ -64,6 +58,7 @@ type HostModel struct {
 	CustomName        string `gorm:"column:custom_name;type:varchar(64)"`
 	FirstRegisterTime int64  `gorm:"column:first_register_time;type:bigint"`
 	NotifyPush        bool   `gorm:"column:notify_push"`
+	Config            string `gorm:"column:config;type:longtext;"`
 }
 
 func (h *HostModel) TableName() string {
@@ -109,4 +104,10 @@ type Notify struct {
 	LastDistance int
 	LastTime     int64
 	HostId       string
+}
+
+type Response struct {
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
+	Data any    `json:"data"`
 }

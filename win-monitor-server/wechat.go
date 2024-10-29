@@ -3,19 +3,18 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
-	"math/rand"
-	"net/http"
-	"strconv"
-	"strings"
-	"time"
-
 	"github.com/gin-gonic/gin"
 	"github.com/silenceper/wechat/v2"
 	"github.com/silenceper/wechat/v2/cache"
 	"github.com/silenceper/wechat/v2/officialaccount"
 	"github.com/silenceper/wechat/v2/officialaccount/config"
 	"github.com/silenceper/wechat/v2/officialaccount/message"
+	"log"
+	"math/rand"
+	"net/http"
+	"strconv"
+	"strings"
+	"time"
 )
 
 type WechatServer struct {

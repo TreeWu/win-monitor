@@ -29,6 +29,7 @@ import axios from 'axios';
 import DeviceList from './components/DeviceList.vue';
 import LineChart from './components/LineChart.vue';
 import dayjs from "dayjs";
+import {DefaultApi} from "@/apis/default-api.ts";
 
 export default {
   computed: {
@@ -49,8 +50,9 @@ export default {
 
     const fetchDevices = async () => {
       try {
-        const response = await axios.get('/api/devices');
-        devices.value = response.data.data;
+        const response = await DefaultApi.consoleHostGet(null)
+        console.log(response)
+        devices.value = response.data
         if (devices.value.length > 0) {
           selectedDevice.value = devices.value[0];
           selectedDeviceId.value = devices.value[0].hostID

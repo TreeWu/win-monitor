@@ -8,7 +8,7 @@ const (
 	MonitorTypeOpen        = "open"
 )
 
-type RegistryResp struct {
+type MonitorConf struct {
 	MonitorEnable                 bool `json:"monitorEnable"`                 // 监控开关
 	ScreenshotEnable              bool `json:"screenshotEnable"`              // 截图开关
 	MonitorUploadInterval         int  `json:"monitorUploadInterval"`         // 监控上传间隔时间
@@ -30,35 +30,34 @@ type Host struct {
 }
 
 type Monitor struct {
-	HostId string `json:"hostId"`
-
-	Items []MonitorItem `json:"items"`
+	HostId string        `json:"hostId"` // 主机唯一标识
+	Items  []MonitorItem `json:"items"`  // 监控数据
 }
 
 type MonitorItem struct {
-	Type     string  `json:"type,omitempty"`
-	BootTime int64   `json:"bootTime,omitempty"`
-	Time     int64   `json:"time,omitempty"`
-	Total    float64 `json:"total,omitempty"`
-	Used     float64 `json:"used,omitempty"`
-	Free     float64 `json:"free,omitempty"`
-	Per      float64 `json:"per,omitempty"`
-	Unit     string  `json:"unit,omitempty"`
-	Name     string  `json:"name,omitempty"`
+	Type     string  `json:"type,omitempty"`     // cpu/mem/disk/open
+	BootTime int64   `json:"bootTime,omitempty"` // 开机时间
+	Time     int64   `json:"time,omitempty"`     // 监控时间
+	Total    float64 `json:"total,omitempty"`    // 总量
+	Used     float64 `json:"used,omitempty"`     // 已使用
+	Free     float64 `json:"free,omitempty"`     // 空闲
+	Per      float64 `json:"per,omitempty"`      // 使用率
+	Unit     string  `json:"unit,omitempty"`     // 单位
+	Name     string  `json:"name,omitempty"`     // 名称
 }
 
 type HostModel struct {
-	Id                int    `gorm:"column:id;type:int(11);primary_key;AUTO_INCREMENT" json:"id"`
-	Hostname          string `gorm:"column:hostname;type:varchar(64)"`
-	OS                string `gorm:"column:os;type:varchar(64)"`
-	Platform          string `gorm:"column:platform;type:varchar(64)"`
-	HostID            string `gorm:"column:host_id;type:varchar(64);unique:host_id"`
-	PlatformFamily    string `gorm:"column:platform_family;type:varchar(64)"`
-	PlatformVersion   string `gorm:"column:platform_version;type:varchar(64)"`
-	CustomName        string `gorm:"column:custom_name;type:varchar(64)"`
-	FirstRegisterTime int64  `gorm:"column:first_register_time;type:bigint"`
-	NotifyPush        bool   `gorm:"column:notify_push"`
-	Config            string `gorm:"column:config;type:longtext;"`
+	Id                int         `gorm:"column:id;type:int(11);primary_key;AUTO_INCREMENT" json:"id"`
+	Hostname          string      `gorm:"column:hostname;type:varchar(64)" json:"hostname"`                                // 主机名
+	OS                string      `gorm:"column:os;type:varchar(64)" json:"OS"`                                            // 系统
+	Platform          string      `gorm:"column:platform;type:varchar(64)" json:"platform"`                                // 系统平台
+	HostID            string      `gorm:"column:host_id;type:varchar(64);unique:host_id" json:"hostID" binding:"required"` // 主机唯一标识
+	PlatformFamily    string      `gorm:"column:platform_family;type:varchar(64)" json:"platformFamily"`                   // 系统家族
+	PlatformVersion   string      `gorm:"column:platform_version;type:varchar(64)" json:"platformVersion"`                 // 系统版本
+	CustomName        string      `gorm:"column:custom_name;type:varchar(64)" json:"customName"`                           // 自定义主机名
+	FirstRegisterTime int64       `gorm:"column:first_register_time;type:bigint" json:"firstRegisterTime"`                 // 首次注册时间
+	NotifyPush        bool        `gorm:"column:notify_push" json:"notifyPush"`                                            // 是否推送告警
+	Config            MonitorConf `gorm:"column:config;type:json;serializer:json"  json:"config" binding:"required"`       // 配置信息
 }
 
 func (h *HostModel) TableName() string {
@@ -87,10 +86,10 @@ func (m *MonitorModel) TableName() string {
 type HostScreenshot struct {
 	Id          int    `gorm:"column:id;type:int(11);primary_key;AUTO_INCREMENT" json:"id,omitempty"`
 	HostId      string `gorm:"column:host_id;type:varchar(64);uniqueIndex" json:"host_id,omitempty"` // 主机唯一标识
-	Cur         string `json:"cur" gorm:"type:longtext;"`
-	Pre         string `json:"pre" gorm:"type:longtext;"`
-	Distance    int    `json:"distance"`
-	CaptureTime int64  `json:"captureTime"`
+	Cur         string `json:"cur" gorm:"type:longtext;"`                                            // 当前截图
+	Pre         string `json:"pre" gorm:"type:longtext;"`                                            // 上次截图
+	Distance    int    `json:"distance"`                                                             // 相似度
+	CaptureTime int64  `json:"captureTime"`                                                          // 截图时间
 }
 
 func (h *HostScreenshot) TableName() string {
@@ -110,4 +109,9 @@ type Response struct {
 	Code int    `json:"code"`
 	Msg  string `json:"msg"`
 	Data any    `json:"data"`
+}
+
+type HostMonitor struct {
+	Monitors   []MonitorModel `json:"monitors"`
+	Screenshot HostScreenshot `json:"screenshot"`
 }

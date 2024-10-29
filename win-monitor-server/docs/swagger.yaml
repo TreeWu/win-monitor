@@ -1,0 +1,363 @@
+definitions:
+  main.Host:
+    properties:
+      hostID:
+        description: 'ex: uuid'
+        type: string
+      hostname:
+        type: string
+      os:
+        description: 'ex: freebsd, linux'
+        type: string
+      platform:
+        description: 'ex: ubuntu, linuxmint'
+        type: string
+      platformFamily:
+        description: 'ex: debian, rhel'
+        type: string
+      platformVersion:
+        description: version of the complete OS
+        type: string
+    type: object
+  main.HostModel:
+    properties:
+      OS:
+        description: 系统
+        type: string
+      config:
+        allOf:
+          - $ref: '#/definitions/main.MonitorConf'
+        description: 配置信息
+      customName:
+        description: 自定义主机名
+        type: string
+      firstRegisterTime:
+        description: 首次注册时间
+        type: integer
+      hostID:
+        description: 主机唯一标识
+        type: string
+      hostname:
+        description: 主机名
+        type: string
+      id:
+        type: integer
+      notifyPush:
+        description: 是否推送告警
+        type: boolean
+      platform:
+        description: 系统平台
+        type: string
+      platformFamily:
+        description: 系统家族
+        type: string
+      platformVersion:
+        description: 系统版本
+        type: string
+    required:
+      - config
+      - hostID
+    type: object
+  main.HostMonitor:
+    properties:
+      monitors:
+        items:
+          $ref: '#/definitions/main.MonitorModel'
+        type: array
+      screenshot:
+        $ref: '#/definitions/main.HostScreenshot'
+    type: object
+  main.HostScreenshot:
+    properties:
+      captureTime:
+        description: 截图时间
+        type: integer
+      cur:
+        description: 当前截图
+        type: string
+      distance:
+        description: 相似度
+        type: integer
+      host_id:
+        description: 主机唯一标识
+        type: string
+      id:
+        type: integer
+      pre:
+        description: 上次截图
+        type: string
+    type: object
+  main.Monitor:
+    properties:
+      hostId:
+        description: 主机唯一标识
+        type: string
+      items:
+        description: 监控数据
+        items:
+          $ref: '#/definitions/main.MonitorItem'
+        type: array
+    type: object
+  main.MonitorConf:
+    properties:
+      maxMonitorSize:
+        description: 监控数据最大保存数量
+        type: integer
+      monitorCollectInterval:
+        description: 采集间隔时间
+        type: integer
+      monitorEnable:
+        description: 监控开关
+        type: boolean
+      monitorUploadInterval:
+        description: 监控上传间隔时间
+        type: integer
+      screenshotEnable:
+        description: 截图开关
+        type: boolean
+      screenshotIntervalTime:
+        description: 截图间隔时间
+        type: integer
+      screenshotUploadIntervalCount:
+        description: 多少张截图后强制上传
+        type: integer
+      screenshotUploadMinDistance:
+        description: 当前截图和上次截图对比，如果相似度小于该值则上传
+        type: integer
+      screenshotUploadOriginImage:
+        description: 是否上传原图
+        type: boolean
+    type: object
+  main.MonitorItem:
+    properties:
+      bootTime:
+        description: 开机时间
+        type: integer
+      free:
+        description: 空闲
+        type: number
+      name:
+        description: 名称
+        type: string
+      per:
+        description: 使用率
+        type: number
+      time:
+        description: 监控时间
+        type: integer
+      total:
+        description: 总量
+        type: number
+      type:
+        description: cpu/mem/disk/open
+        type: string
+      unit:
+        description: 单位
+        type: string
+      used:
+        description: 已使用
+        type: number
+    type: object
+  main.MonitorModel:
+    properties:
+      boot_time:
+        description: 开机时间
+        type: integer
+      free:
+        description: 空闲
+        type: number
+      host_id:
+        description: 主机唯一标识
+        type: string
+      id:
+        type: integer
+      name:
+        description: 名称
+        type: string
+      per:
+        description: 使用率
+        type: number
+      time:
+        description: 监控时间
+        type: integer
+      total:
+        description: 总量
+        type: number
+      type:
+        description: 监控类型 cpu/mem/disk/open
+        type: string
+      unit:
+        description: 单位
+        type: string
+      used:
+        description: 已使用
+        type: number
+    type: object
+  main.Response:
+    properties:
+      code:
+        type: integer
+      data: { }
+      msg:
+        type: string
+    type: object
+info:
+  contact: { }
+paths:
+  /api/monitor:
+    post:
+      consumes:
+        - application/json
+      description: 监控数据上传
+      parameters:
+        - description: 参数
+          in: body
+          name: 参数
+          required: true
+          schema:
+            $ref: '#/definitions/main.Monitor'
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+              - $ref: '#/definitions/main.Response'
+              - properties:
+                  data:
+                    type: string
+                type: object
+      summary: 监控数据上传
+      tags:
+        - 客户端接口
+  /api/register:
+    post:
+      consumes:
+        - application/json
+      description: 设备注册
+      parameters:
+        - description: 参数
+          in: body
+          name: 参数
+          required: true
+          schema:
+            $ref: '#/definitions/main.Host'
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+              - $ref: '#/definitions/main.Response'
+              - properties:
+                  data:
+                    $ref: '#/definitions/main.MonitorConf'
+                type: object
+      summary: 设备注册
+      tags:
+        - 客户端接口
+  /api/screenshot:
+    post:
+      consumes:
+        - application/json
+      description: 设备注册
+      parameters:
+        - description: 参数
+          in: body
+          name: 参数
+          required: true
+          schema:
+            $ref: '#/definitions/main.HostScreenshot'
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+              - $ref: '#/definitions/main.Response'
+              - properties:
+                  data:
+                    type: string
+                type: object
+      summary: 截图上传
+      tags:
+        - 客户端接口
+  /console/host:
+    get:
+      consumes:
+        - application/json
+      description: 主机列表
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+              - $ref: '#/definitions/main.Response'
+              - properties:
+                  data:
+                    items:
+                      $ref: '#/definitions/main.HostModel'
+                    type: array
+                type: object
+      summary: 主机列表
+      tags:
+        - 控制台接口
+  /console/host/:hostId:
+    get:
+      consumes:
+        - application/json
+      description: 监控数据
+      parameters:
+        - description: 参数
+          in: path
+          name: hostId
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+              - $ref: '#/definitions/main.Response'
+              - properties:
+                  data:
+                    $ref: '#/definitions/main.HostMonitor'
+                type: object
+      summary: 监控数据
+      tags:
+        - 控制台接口
+  /console/host/conf:
+    post:
+      consumes:
+        - application/json
+      description: 程序主机配置
+      parameters:
+        - description: 参数
+          in: body
+          name: 参数
+          required: true
+          schema:
+            $ref: '#/definitions/main.HostModel'
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+              - $ref: '#/definitions/main.Response'
+              - properties:
+                  data:
+                    type: string
+                type: object
+      summary: 程序主机配置
+      tags:
+        - 控制台接口
+swagger: "2.0"

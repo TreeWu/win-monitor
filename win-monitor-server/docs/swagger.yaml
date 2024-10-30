@@ -204,7 +204,7 @@ definitions:
 info:
   contact: { }
 paths:
-  /api/monitor:
+  /api/client/monitor:
     post:
       consumes:
         - application/json
@@ -231,7 +231,7 @@ paths:
       summary: 监控数据上传
       tags:
         - 客户端接口
-  /api/register:
+  /api/client/register:
     post:
       consumes:
         - application/json
@@ -258,7 +258,7 @@ paths:
       summary: 设备注册
       tags:
         - 客户端接口
-  /api/screenshot:
+  /api/client/screenshot:
     post:
       consumes:
         - application/json
@@ -285,7 +285,7 @@ paths:
       summary: 截图上传
       tags:
         - 客户端接口
-  /console/host:
+  /api/console/host:
     get:
       consumes:
         - application/json
@@ -307,7 +307,7 @@ paths:
       summary: 主机列表
       tags:
         - 控制台接口
-  /console/host/:hostId:
+  /api/console/host/:hostId:
     get:
       consumes:
         - application/json
@@ -333,7 +333,7 @@ paths:
       summary: 监控数据
       tags:
         - 控制台接口
-  /console/host/conf:
+  /api/console/host/conf:
     post:
       consumes:
         - application/json

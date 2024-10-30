@@ -4,7 +4,7 @@
     "contact": {}
   },
   "paths": {
-    "/api/monitor": {
+    "/api/client/monitor": {
       "post": {
         "description": "监控数据上传",
         "consumes": [
@@ -50,7 +50,7 @@
         }
       }
     },
-    "/api/register": {
+    "/api/client/register": {
       "post": {
         "description": "设备注册",
         "consumes": [
@@ -96,7 +96,7 @@
         }
       }
     },
-    "/api/screenshot": {
+    "/api/client/screenshot": {
       "post": {
         "description": "设备注册",
         "consumes": [
@@ -142,7 +142,7 @@
         }
       }
     },
-    "/console/host": {
+    "/api/console/host": {
       "get": {
         "description": "主机列表",
         "consumes": [
@@ -180,7 +180,7 @@
         }
       }
     },
-    "/console/host/:hostId": {
+    "/api/console/host/:hostId": {
       "get": {
         "description": "监控数据",
         "consumes": [
@@ -224,7 +224,7 @@
         }
       }
     },
-    "/console/host/conf": {
+    "/api/console/host/conf": {
       "post": {
         "description": "程序主机配置",
         "consumes": [

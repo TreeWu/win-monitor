@@ -4,6 +4,7 @@
       <device-list
           :devices="devices"
           :selectedDeviceId="selectedDeviceId"
+          @device-edit="deviceEdit"
           @device-selected="handleDeviceSelected"
       />
     </a-layout-sider>
@@ -25,7 +26,6 @@
 
 <script>
 import {onMounted, ref} from 'vue';
-import axios from 'axios';
 import DeviceList from './components/DeviceList.vue';
 import LineChart from './components/LineChart.vue';
 import dayjs from "dayjs";
@@ -41,18 +41,19 @@ export default {
     DeviceList,
     LineChart
   },
-  setup() {
+  setup: function () {
     const devices = ref([]);
     const groupedDeviceData = ref([]);
     const deviceScreenshot = ref(null)
     const selectedDevice = ref(null);
     const selectedDeviceId = ref(null);
+    const api = new DefaultApi()
+
 
     const fetchDevices = async () => {
       try {
-        const response = await DefaultApi.consoleHostGet(null)
-        console.log(response)
-        devices.value = response.data
+        const response = await api.apiConsoleHostGet()
+        devices.value = response.data.data
         if (devices.value.length > 0) {
           selectedDevice.value = devices.value[0];
           selectedDeviceId.value = devices.value[0].hostID
@@ -65,7 +66,7 @@ export default {
     const fetchDeviceData = async () => {
       if (selectedDevice.value !== null) {
         try {
-          const response = await axios.get(`/api/device/${selectedDevice.value.hostID}`);
+          const response = await api.apiConsoleHostHostIdGet(selectedDevice.value.hostID)
           const data = response.data.data.monitors;
           deviceScreenshot.value = response.data.data.screenshot;
           const groupedData = data.reduce((acc, item) => {
@@ -90,6 +91,9 @@ export default {
       }
       setTimeout(fetchDeviceData, 5000)
     };
+    const deviceEdit = function () {
+      fetchDevices();
+    }
 
     const handleDeviceSelected = async (device) => {
       selectedDevice.value = device;
@@ -100,6 +104,7 @@ export default {
       fetchDeviceData()
     });
     return {
+      deviceEdit,
       devices,
       groupedDeviceData,
       handleDeviceSelected,

@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/monitor": {
+        "/api/client/monitor": {
             "post": {
                 "description": "监控数据上传",
                 "consumes": [
@@ -61,7 +61,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/register": {
+        "/api/client/register": {
             "post": {
                 "description": "设备注册",
                 "consumes": [
@@ -107,7 +107,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/screenshot": {
+        "/api/client/screenshot": {
             "post": {
                 "description": "设备注册",
                 "consumes": [
@@ -153,7 +153,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/console/host": {
+        "/api/console/host": {
             "get": {
                 "description": "主机列表",
                 "consumes": [
@@ -191,7 +191,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/console/host/:hostId": {
+        "/api/console/host/:hostId": {
             "get": {
                 "description": "监控数据",
                 "consumes": [
@@ -235,7 +235,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/console/host/conf": {
+        "/api/console/host/conf": {
             "post": {
                 "description": "程序主机配置",
                 "consumes": [

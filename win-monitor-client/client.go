@@ -23,10 +23,10 @@ import (
 )
 
 const (
-	apiHost         = "http://localhost/"
-	registerUrl     = apiHost + "api/register"
-	monitorUrl      = apiHost + "api/monitor"
-	screenshotUrl   = apiHost + "api/screenshot"
+	apiHost         = "http://localhost"
+	registerUrl     = apiHost + "api/client/register"
+	monitorUrl      = apiHost + "api/client/monitor"
+	screenshotUrl   = apiHost + "api/client/screenshot"
 	registerTimeout = time.Second * 10
 )
 
